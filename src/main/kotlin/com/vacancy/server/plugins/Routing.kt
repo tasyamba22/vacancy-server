@@ -28,5 +28,6 @@ fun Application.configureRouting() {
         adminRoutes(userRepository, vacancyRepository)
         resumeRoutes(resumeRepository, userRepository)
         responseRoutes(responseRepository, resumeRepository, vacancyRepository, userRepository)
+        profileRoutes(userRepository)
     }
 }
