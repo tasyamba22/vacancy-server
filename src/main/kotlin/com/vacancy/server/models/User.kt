@@ -10,6 +10,8 @@ object Users : Table("users") {
     val passwordHash = varchar("password_hash", 255)
     val role = varchar("role", 50).default("USER")
     val isBlocked = bool("is_blocked").default(false)
+    val firstName = varchar("first_name", 100).nullable()
+    val lastName = varchar("last_name", 100).nullable()
     val createdAt = timestamp("created_at")
 
     override val primaryKey = PrimaryKey(id)
@@ -21,6 +23,8 @@ data class UserResponse(
     val email: String,
     val role: String,
     val isBlocked: Boolean,
+    val firstName: String?,
+    val lastName: String?,
     val createdAt: String
 )
 
@@ -41,4 +45,10 @@ data class AuthResponse(
     val token: String,
     val role: String,
     val userId: Int
+)
+
+@Serializable
+data class UpdateProfileRequest(
+    val firstName: String?,
+    val lastName: String?
 )

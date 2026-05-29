@@ -11,7 +11,9 @@ data class UserRecord(
     val email: String,
     val passwordHash: String,
     val role: String,
-    val isBlocked: Boolean
+    val isBlocked: Boolean,
+    val firstName: String?,
+    val lastName: String?
 )
 
 class UserRepository {
@@ -64,19 +66,30 @@ class UserRepository {
         Users.selectAll().count()
     }
 
+    fun updateProfile(id: Int, firstName: String?, lastName: String?) = transaction {
+        Users.update({ Users.id eq id }) {
+            firstName?.let { v -> it[Users.firstName] = v }
+            lastName?.let { v -> it[Users.lastName] = v }
+        }
+    }
+
     private fun toRecord(row: ResultRow) = UserRecord(
         id = row[Users.id],
         email = row[Users.email],
         passwordHash = row[Users.passwordHash],
         role = row[Users.role],
-        isBlocked = row[Users.isBlocked]
+        isBlocked = row[Users.isBlocked],
+        firstName = row[Users.firstName],
+        lastName = row[Users.lastName]
     )
 
-    private fun toResponse(row: ResultRow) = UserResponse(
+    private fun toResponse(row: ResultRow): UserResponse = UserResponse(
         id = row[Users.id],
         email = row[Users.email],
         role = row[Users.role],
         isBlocked = row[Users.isBlocked],
+        firstName = row[Users.firstName],
+        lastName = row[Users.lastName],
         createdAt = row[Users.createdAt].toString()
     )
 }
