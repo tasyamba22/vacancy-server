@@ -23,7 +23,7 @@ fun Route.profileRoutes(userRepository: UserRepository) {
                         call.respond(HttpStatusCode.NotFound, """{"error": "User not found"}""")
                         return@get
                     }
-                
+
                 val response = """
                     {
                         "id": ${user.id},
