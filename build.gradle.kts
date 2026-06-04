@@ -27,6 +27,7 @@ dependencies {
     // Ktor auth
     implementation("io.ktor:ktor-server-auth-jvm:2.3.12")
     implementation("io.ktor:ktor-server-auth-jwt-jvm:2.3.12")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
 
     // Ktor status pages
     implementation("io.ktor:ktor-server-status-pages-jvm:2.3.12")
