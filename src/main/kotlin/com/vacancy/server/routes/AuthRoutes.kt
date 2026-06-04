@@ -46,10 +46,11 @@ fun Route.authRoutes(
             val passwordHash = HashHelper.hashPassword(request.password)
             val userId = userRepository.create(request.email, passwordHash)
 
-            val token = JwtHelper.generateToken(userId, "USER", jwtSecret, jwtIssuer, jwtAudience, jwtExpiration)
-            tokenRepository.save(userId, token)
+            val accessToken = JwtHelper.generateToken(userId, "USER", jwtSecret, jwtIssuer, jwtAudience, jwtExpiration)
+            val refreshToken = JwtHelper.generateRefreshToken(userId, jwtSecret, jwtIssuer, jwtAudience)
 
-            call.respond(HttpStatusCode.Created, AuthResponse(token = token, role = "USER", userId = userId))
+            tokenRepository.save(userId, accessToken)
+            call.respond(HttpStatusCode.Created, AuthResponse(token = accessToken, refreshToken = refreshToken, role = "USER", userId = userId))
         }
 
         post("/login") {
@@ -71,10 +72,12 @@ fun Route.authRoutes(
                 return@post
             }
 
-            val token = JwtHelper.generateToken(user.id, user.role, jwtSecret, jwtIssuer, jwtAudience, jwtExpiration)
-            tokenRepository.save(user.id, token)
+            val accessToken = JwtHelper.generateToken(user.id, user.role, jwtSecret, jwtIssuer, jwtAudience, jwtExpiration)
+            val refreshToken = JwtHelper.generateRefreshToken(user.id, jwtSecret, jwtIssuer, jwtAudience)
 
-            call.respond(HttpStatusCode.OK, AuthResponse(token = token, role = user.role, userId = user.id))
+            tokenRepository.save(user.id, accessToken)
+
+            call.respond(HttpStatusCode.OK, AuthResponse(token = accessToken,  refreshToken = refreshToken, role = user.role, userId = user.id))
         }
 
         authenticate("jwt-auth") {
