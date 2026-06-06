@@ -35,7 +35,7 @@ object JwtHelper {
             .withAudience(audience)
             .withIssuer(issuer)
             .withClaim("userId", userId)
-            .withClaim("type", "refresh")           // важно отличать
+            .withClaim("type", "refresh")
             .withExpiresAt(java.util.Date(expirationMs))
             .sign(Algorithm.HMAC256(secret))
     }
